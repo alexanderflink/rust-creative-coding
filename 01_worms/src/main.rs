@@ -3,6 +3,7 @@ use nannou::App;
 use std::ops::AddAssign;
 use std::ops::MulAssign;
 
+const APP_LIFETIME_SECONDS: u64 = 10;
 const NUM_BODIES: usize = 200;
 const DEFAULT_DRAG: f32 = 0.95;
 const DEFAULT_RADIUS: f32 = 1.0;
@@ -64,7 +65,11 @@ fn update(_app: &App, _model: &mut Model, _update: Update) {
         body.velocity.add_assign(random_direction * DEFAULT_SPEED);
         body.velocity.mul_assign(body.drag);
         body.position.add_assign(body.velocity);
-    })
+    });
+
+    if _app.duration.since_start.as_secs() >= APP_LIFETIME_SECONDS {
+        _app.quit();
+    }
 }
 
 fn view(_app: &App, _model: &Model, frame: Frame) {
